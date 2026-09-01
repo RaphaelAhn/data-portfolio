@@ -1,0 +1,31 @@
+# Raw / restricted data
+data/
+raw/
+datasets/
+*.csv
+*.parquet
+*.feather
+*.pkl
+*.joblib
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+secrets/
+credentials/
+
+# Python and notebook outputs
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
