@@ -30,6 +30,7 @@ This page separates the tools named in the resume and cover letter from the evid
 | Case study | Verifiable tools and methods | Interpretation scope |
 | --- | --- | --- |
 | [Public Clickstream User-Exploration Analysis](projects/clickstream-behavior-analysis/README.en.md) | SQL, Node.js, session aggregation, exploration-depth segments, descriptive analysis | Public clickstream analysis without purchase, revenue, or retention outcomes |
+| [Customer Repurchase Prediction and CRM Prioritization](projects/customer-repurchase-analytics/) | Python, time-based validation, RFM and product-diversity features, baseline comparison, capacity-aware ranking | Offline analysis of public transaction data |
 | [Fraud Risk Scoring](projects/fraud-risk-scoring/README.en.md) | Python, time-based validation, baseline comparison, prioritization queue, error/segment analysis | Offline prototype on simulated data |
 | [Sales & Marketing Analytics + AI Copilot](projects/sales-marketing-analytics-ai-copilot/README.en.md) | Data-mart design, data-quality rules, SQL modeling, AI workflow design | Fictional case study using synthetic-data assumptions |
 
