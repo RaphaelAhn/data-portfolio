@@ -1,0 +1,26 @@
+{
+  "source": "UCI Online Retail (DOI: 10.24432/C5BW33)",
+  "clean_transactions": 397884,
+  "unique_customers": 4338,
+  "training_rows": 8972,
+  "test_customers": 3357,
+  "test_repurchase_rate": 0.5701519213583557,
+  "model": {
+    "roc_auc": 0.7354513302789165,
+    "top_10pct": {
+      "contacts": 336,
+      "precision": 0.9553571428571429,
+      "recall": 0.1677115987460815,
+      "captured": 321
+    }
+  },
+  "recency_baseline": {
+    "roc_auc": 0.6870852043265836,
+    "top_10pct": {
+      "contacts": 336,
+      "precision": 0.7886904761904762,
+      "recall": 0.13845350052246605,
+      "captured": 265
+    }
+  }
+}

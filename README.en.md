@@ -11,11 +11,12 @@ This repository is a portfolio hub for data science, data engineering, and analy
 | Project | Role focus | What it demonstrates |
 | --- | --- | --- |
 | [Fraud Risk Scoring](projects/fraud-risk-scoring/README.en.md) | Data Science · Risk Analytics | Time-based validation, label delay, review-capacity metrics, and error/segment analysis |
+| [Customer Repurchase Prediction and CRM Prioritization](projects/customer-repurchase-analytics/) | Data Science · CRM Analytics | Time-based validation, RFM and product-diversity features, capacity-aware ranking, and experimental boundaries |
 
 ## Repository policy
 
 - Raw data, personal information, private keys, and local environment files are not published.
-- This is a **portfolio hub**. Executable code and complete reproducibility instructions will be linked from separate project repositories once they are ready for publication.
+- Compact case studies may include executable analysis code when the public data and validation steps are reproducible. Larger implementations are linked from separate project repositories.
 - Each case prioritizes publicly shareable evidence and a clear explanation of result scope and limitations.
 
 ## Contact
