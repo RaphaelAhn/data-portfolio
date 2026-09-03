@@ -22,4 +22,3 @@ models:
 seeds:
   commerce_analytics_engineering_lab:
     +quote_columns: false
-

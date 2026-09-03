@@ -11,4 +11,3 @@ select
   i.item_net_amount
 from {{ ref('stg_order_items') }} i
 join {{ ref('stg_orders') }} o using (order_id)
-

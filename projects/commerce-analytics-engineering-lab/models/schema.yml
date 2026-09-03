@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_orders
-    description: Keeps the latest order state by updated_at from the order change history.
+    description: One latest order state per order_id, selected from order change history by updated_at.
     columns:
       - name: order_id
         tests: [not_null, unique]
@@ -33,7 +33,7 @@ models:
               field: product_id
 
   - name: stg_payments
-    description: Keeps the latest state for each payment_id.
+    description: One latest payment state per payment_id.
     columns:
       - name: payment_id
         tests: [not_null, unique]
@@ -48,7 +48,7 @@ models:
               values: ['requested', 'completed', 'cancelled']
 
   - name: stg_refunds
-    description: Keeps the latest state for each refund_id, including late-arriving updates.
+    description: One latest refund state per refund_id, including late-arriving changes.
     columns:
       - name: refund_id
         tests: [not_null, unique]
@@ -87,7 +87,7 @@ models:
         tests: [not_null, unique]
 
   - name: fct_orders
-    description: Provides item totals, payments, refunds, and net revenue at the order grain.
+    description: Order-grain fact combining merchandise totals, completed payments, completed refunds, and net revenue.
     columns:
       - name: order_id
         tests: [not_null, unique]
@@ -98,7 +98,7 @@ models:
               field: customer_id
 
   - name: fct_order_items
-    description: Supports product analysis at the order-item grain.
+    description: Order-item-grain fact for product and category analysis.
     columns:
       - name: order_item_id
         tests: [not_null, unique]

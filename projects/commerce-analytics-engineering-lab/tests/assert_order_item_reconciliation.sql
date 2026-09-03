@@ -13,4 +13,3 @@ select
 from {{ ref('fct_orders') }} o
 join item_totals i using (order_id)
 where o.ordered_net_amount <> i.item_net_amount
-

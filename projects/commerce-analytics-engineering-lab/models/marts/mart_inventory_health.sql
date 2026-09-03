@@ -17,4 +17,3 @@ select
   l.latest_ingested_at
 from latest l
 join {{ ref('dim_product') }} p using (product_id)
-

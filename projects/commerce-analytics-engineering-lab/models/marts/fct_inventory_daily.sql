@@ -9,4 +9,3 @@ select
   ) as ending_inventory_quantity,
   latest_ingested_at
 from {{ ref('int_inventory_movements') }}
-

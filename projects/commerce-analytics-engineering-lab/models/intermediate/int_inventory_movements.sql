@@ -5,4 +5,3 @@ select
   max(ingested_at) as latest_ingested_at
 from {{ ref('stg_inventory_events') }}
 group by 1, 2
-

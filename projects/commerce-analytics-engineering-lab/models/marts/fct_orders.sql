@@ -18,4 +18,3 @@ select
   a.order_status = 'completed' and r.completed_payment_amount > 0 as is_recognized_order
 from {{ ref('int_order_amounts') }} a
 join {{ ref('int_payment_refund_reconciliation') }} r using (order_id)
-

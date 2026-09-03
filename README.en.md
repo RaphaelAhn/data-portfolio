@@ -12,6 +12,7 @@ This repository is a portfolio hub for data science, data engineering, and analy
 | --- | --- | --- |
 | [Fraud Risk Scoring](projects/fraud-risk-scoring/README.en.md) | Data Science · Risk Analytics | Time-based validation, label delay, review-capacity metrics, and error/segment analysis |
 | [Customer Repurchase Prediction and CRM Prioritization](projects/customer-repurchase-analytics/) | Data Science · CRM Analytics | Time-based validation, RFM and product-diversity features, capacity-aware ranking, and experimental boundaries |
+| [Commerce Analytics Engineering Lab](projects/commerce-analytics-engineering-lab/) | Analytics Engineering · Commerce Data | Order/payment/refund reconciliation, governed metrics, late-data testing, inventory modeling, and idempotent rebuilds |
 
 ## Repository policy
 

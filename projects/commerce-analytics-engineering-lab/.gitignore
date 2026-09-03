@@ -1,10 +1,10 @@
 .venv/
+.user.yml
 target/
 logs/
 dbt_packages/
 *.duckdb
 *.duckdb.wal
-.user.yml
 
 # Repository-wide rules ignore CSV files by default; these are synthetic,
 # deterministic dbt fixtures and are intentionally version-controlled.

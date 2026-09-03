@@ -4,4 +4,3 @@ select *
 from {{ ref('fct_orders') }}
 where order_id = 'O105'
   and (completed_refund_amount <> 5000 or net_revenue <> 30000)
-

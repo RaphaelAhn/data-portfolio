@@ -10,4 +10,3 @@ select
 from {{ ref('stg_orders') }} o
 join {{ ref('stg_order_items') }} i using (order_id)
 group by 1, 2, 3, 4, 5
-

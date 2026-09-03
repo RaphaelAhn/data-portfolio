@@ -30,4 +30,3 @@ select
 from {{ ref('stg_orders') }} o
 left join completed_payments p using (order_id)
 left join completed_refunds r using (order_id)
-

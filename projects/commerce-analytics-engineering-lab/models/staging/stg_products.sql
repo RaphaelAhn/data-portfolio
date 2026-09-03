@@ -5,4 +5,3 @@ select
   cast(valid_from as date) as valid_from,
   try_cast(valid_to as date) as valid_to
 from {{ ref('raw_products') }}
-

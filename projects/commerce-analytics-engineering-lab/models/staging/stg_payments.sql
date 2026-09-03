@@ -15,4 +15,3 @@ qualify row_number() over (
   partition by payment_id
   order by updated_at desc
 ) = 1
-

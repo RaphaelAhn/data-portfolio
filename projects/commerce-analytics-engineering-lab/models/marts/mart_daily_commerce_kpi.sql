@@ -11,4 +11,3 @@ select
   ) as average_order_value
 from {{ ref('fct_orders') }}
 group by 1
-

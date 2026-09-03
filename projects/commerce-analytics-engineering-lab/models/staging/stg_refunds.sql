@@ -16,4 +16,3 @@ qualify row_number() over (
   partition by refund_id
   order by updated_at desc, ingested_at desc
 ) = 1
-

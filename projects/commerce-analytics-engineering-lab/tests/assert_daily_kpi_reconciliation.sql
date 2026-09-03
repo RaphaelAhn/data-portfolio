@@ -13,4 +13,3 @@ select
 from {{ ref('mart_daily_commerce_kpi') }} m
 join fact_totals f on m.metric_date = f.order_date
 where m.net_revenue <> f.net_revenue
-

@@ -1,75 +1,115 @@
 # Commerce Analytics Engineering Lab
 
-This synthetic-data portfolio project integrates order, payment, refund, product, customer, and inventory data into consistent analytics models. It also demonstrates data-quality controls and deterministic reprocessing.
+A synthetic, local portfolio project that turns order, payment, refund, product, customer, and inventory records into consistent analytical models and governed commerce metrics.
 
-> This project is a local prototype. It does not use CJ Olive Young data or systems, and it does not claim production experience, cloud-scale processing, real-time pipeline operation, or business impact.
+> **Scope notice:** This project does not use CJ Olive Young data or systems. It does not claim production-scale processing, cloud operations, real-time pipeline experience, or realized business impact. The repository demonstrates modeling and validation choices on deterministic synthetic fixtures.
 
-## Problem Statement
+## Why this project exists
 
-Commerce metrics can diverge when teams interpret order status, payment status, partial refunds, and late-arriving updates differently. This project answers four practical questions with reproducible SQL models:
+Commerce teams can calculate different versions of the same metric when order status, payment status, partial refunds, and late-arriving updates live in separate systems. This project creates one reusable transformation path for questions such as:
 
-1. How should completed and cancelled orders be distinguished?
+1. What qualifies as a completed order?
 2. How should completed payments and partial refunds be reconciled?
-3. How should a late-arriving refund update a historical order-date metric?
+3. How should a late refund restate the original order-date metric?
 4. How can duplicate inventory events and invalid product references be detected?
+5. Does a repeated pipeline run produce the same analytical outputs?
 
-## Data Flow
+## Three portfolio examples
+
+### 1. Order, payment, and refund reconciliation
+
+The project builds one row per order in `fct_orders`. It combines ordered merchandise value, completed payments, completed refunds, and recognized net revenue.
+
+```text
+orders + order items + payments + refunds
+    → typed and deduplicated staging models
+    → order amount and payment/refund reconciliation models
+    → fct_orders
+    → mart_daily_commerce_kpi
+```
+
+The shared rule is:
+
+```text
+net revenue = completed payment amount - completed refund amount
+```
+
+Cancelled orders receive zero recognized revenue. Average order value uses `NULLIF` so a day with zero completed orders does not cause a divide-by-zero error.
+
+### 2. Late-arriving refunds, quality tests, and idempotent rebuilds
+
+Synthetic refund `R102` occurs on August 10 but arrives on August 12. Rebuilding the models restates order `O105` from 35,000 to 30,000 net revenue on its original order date.
+
+The project validates primary keys, relationships, accepted statuses, amount ranges, order/payment reconciliation, late-refund behavior, daily KPI reconciliation, and non-negative inventory. `scripts/verify_idempotency.py` runs `dbt build` twice and compares row counts and SHA-256 hashes for five core marts.
+
+### 3. Inventory events and stockout status
+
+Receipt, sale, return, and adjustment events are deduplicated by `event_id`, aggregated by product and event date, and converted into a running ending-inventory balance. `mart_inventory_health` exposes the latest balance and stockout flag per product.
+
+```text
+inventory events
+    → latest event per event_id
+    → product-day movement
+    → cumulative ending inventory
+    → latest product inventory and stockout status
+```
+
+## Model layers and grain
+
+| Model | Grain | Purpose |
+| --- | --- | --- |
+| `fct_orders` | One row per order | Reconciles merchandise, payment, refund, and net revenue |
+| `fct_order_items` | One row per order item | Supports product and category analysis |
+| `dim_customer` | One row per customer | Provides join-safe customer attributes |
+| `dim_product` | One row per product | Provides product and category attributes |
+| `fct_inventory_daily` | One row per product and movement date | Calculates daily movement and running ending inventory |
+| `mart_daily_commerce_kpi` | One row per order date | Publishes completed orders, revenue components, and average order value |
+| `mart_inventory_health` | One row per product | Publishes latest inventory and stockout status |
+
+## Data flow
 
 ```text
 CSV seeds
   └─ raw_orders / raw_order_items / raw_payments / raw_refunds
      raw_products / raw_customers / raw_inventory_events
           ↓
-staging: type normalization, status standardization, latest-record selection,
-         and inventory-event deduplication
+staging: types, normalized statuses, latest records, duplicate removal
           ↓
-intermediate: order amounts, payment-refund reconciliation,
-              and daily inventory movements
+intermediate: order amounts, payment/refund reconciliation, inventory movement
           ↓
-marts: order and order-item facts, customer and product dimensions,
-       daily KPIs, and current inventory health
+marts: facts, dimensions, daily commerce KPIs, inventory health
 ```
 
-## Models and Grain
+## Metric contract
 
-| Model | Grain | Purpose |
+| Metric | Definition | Exclusions and cautions |
 | --- | --- | --- |
-| `fct_orders` | One row per order | Combines item totals, completed payments, completed refunds, and net revenue |
-| `fct_order_items` | One row per order item | Supports quantity and amount analysis by product and category |
-| `dim_customer` | One row per customer | Provides signup date and an analytics-ready customer segment |
-| `dim_product` | One row per product | Provides product and category attributes |
-| `fct_inventory_daily` | One row per product and movement date | Calculates daily movement and cumulative closing inventory |
-| `mart_daily_commerce_kpi` | One row per order date | Provides completed orders, gross merchandise value, discounts, payments, net revenue, and average order value |
-| `mart_inventory_health` | One row per product | Provides latest inventory and out-of-stock status |
+| Gross product amount | Sum of quantity × list price for recognized orders | Excludes cancelled orders |
+| Discount amount | Sum of item-level discounts for recognized orders | Tests reject negative discounts and discounts above merchandise value |
+| Completed payment amount | Latest payments whose status is `completed` | Excludes requested and cancelled payments |
+| Net revenue | Completed payment amount − completed refund amount | Includes partial refunds and restates the order-date metric |
+| Completed orders | Completed orders with a positive completed payment | Treatment of fully refunded orders requires a business decision |
+| Average order value | Net revenue ÷ completed orders | Returns `NULL` when the denominator is zero |
 
-## Metric Definitions
+## Verification evidence
 
-| Metric | Definition | Exclusions and caveats |
-| --- | --- | --- |
-| Gross merchandise value | Sum of `quantity × listed price` for completed orders | Excludes cancelled orders |
-| Discount amount | Sum of discounts allocated to completed order items | Tests reject negative discounts and discounts above gross item value |
-| Completed payment amount | Payment amount whose latest status is `completed` | Excludes requested and cancelled payments |
-| Net revenue | Completed payment amount − completed refund amount | Includes partial refunds and restates historical order-date metrics |
-| Completed orders | Distinct completed orders with a completed payment | Removes duplicate status history |
-| Average order value | Net revenue ÷ completed orders | Returns `null` when the denominator is zero |
+The checked-in synthetic fixtures were built twice with dbt 1.9.8 and dbt-duckdb 1.9.6.
 
-Refund `R102` represents a late-arriving record loaded two days after the refund event. A full rerun restates order `O105` net revenue from 35,000 to 30,000 for its original order date. This simplified example demonstrates the recent-window reprocessing principle used in incremental pipelines.
+- 7 seeds, 17 models, and 47 data tests per build
+- 71 total dbt items per build
+- `PASS=71, WARN=0, ERROR=0, SKIP=0` on both builds
+- Identical row counts and SHA-256 hashes for all five core marts across both runs
 
-## Data-Quality Controls
+This evidence proves deterministic behavior for the current small fixtures. It does not prove production concurrency, distributed exactly-once processing, service-level objectives, or large-scale query performance.
 
-- Validate primary-key completeness and uniqueness.
-- Validate referential integrity across order items, payments, refunds, inventory events, products, and orders.
-- Validate allowed values for order, payment, refund, and inventory-reason statuses.
-- Validate reasonable ranges for quantity, price, discount, net revenue, and inventory.
-- Reconcile order-item totals with the order fact.
-- Reconcile completed payment amounts with net order-item amounts.
-- Confirm that a late-arriving completed refund is reflected in net revenue.
-- Reconcile daily KPI net revenue with the order fact.
-- Confirm that two runs with identical inputs produce identical mart results.
+## Documentation
 
-## Run Locally
+- [Beginner-friendly technical guide](docs/TECHNICAL_GUIDE.md)
+- [Evidence-based code review](docs/CODE_REVIEW.md)
 
-Python 3.11 or later is recommended.
+## Run locally
+
+Python 3.11 or newer is recommended.
 
 ```powershell
 python -m venv .venv
@@ -77,20 +117,22 @@ python -m venv .venv
 .\.venv\Scripts\python.exe scripts\verify_idempotency.py
 ```
 
-The final command runs `dbt build` twice and confirms that row counts and SHA-256 hashes match for the core marts. The generated DuckDB database, logs, and dbt artifacts are stored under ignored local directories and are not committed to Git.
+DuckDB files, dbt build artifacts, logs, virtual environments, and personal settings are excluded from version control.
 
-## Production Extension Plan
+## Production extension path
 
-- Use `updated_at` from orders, payments, and refunds as incremental watermarks.
-- Recalculate a recent time window to capture late-arriving refunds.
-- Retain only the latest record for each `order_id`, `payment_id`, `refund_id`, and `event_id`.
-- Reprocess only affected order-date partitions after a failure.
-- Record run time, processed row counts, test results, and the latest source timestamp in operational logs.
-- For BigQuery, select order-date partitioning and customer or product clustering only after measuring real query patterns.
+- Use source `updated_at` and `ingested_at` watermarks for incremental processing.
+- Reprocess the order-date partitions affected by late refunds.
+- Add a deterministic CDC sequence, LSN, or offset for tie-breaking.
+- Record run time, row counts, rejected rows, test outcomes, and source freshness.
+- Add an opening inventory snapshot and reconcile it periodically with event-derived balances.
+- Measure actual query patterns before choosing BigQuery partitioning and clustering keys.
+- Add explicit API, database, file, or message contracts for downstream consumers.
 
-## Scope and Limitations
+## Known limitations
 
-- This is a local batch model built with synthetic data; it does not reproduce production traffic or data volume.
-- CDC, Kafka, Flink, and API serving are outside the implementation scope.
-- Data freshness is documented as a design consideration; no production SLA is claimed.
-- Product validity dates are included, but a complete SCD Type 2 implementation is outside the current scope.
+- The project uses a tiny synthetic batch dataset.
+- CDC, Kafka, Flink, BigQuery, and serving APIs are design extensions, not implemented features.
+- Freshness is documented but no production SLA is measured.
+- Product effective dates are present, but a complete SCD Type 2 transformation is not implemented.
+- The detailed code review documents three Medium and three Low operational gaps.
