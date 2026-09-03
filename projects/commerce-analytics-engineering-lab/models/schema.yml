@@ -1,0 +1,130 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: Keeps the latest order state by updated_at from the order change history.
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: order_status
+        tests:
+          - accepted_values:
+              values: ['pending', 'completed', 'cancelled']
+
+  - name: stg_order_items
+    columns:
+      - name: order_item_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+
+  - name: stg_payments
+    description: Keeps the latest state for each payment_id.
+    columns:
+      - name: payment_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: payment_status
+        tests:
+          - accepted_values:
+              values: ['requested', 'completed', 'cancelled']
+
+  - name: stg_refunds
+    description: Keeps the latest state for each refund_id, including late-arriving updates.
+    columns:
+      - name: refund_id
+        tests: [not_null, unique]
+      - name: payment_id
+        tests:
+          - relationships:
+              to: ref('stg_payments')
+              field: payment_id
+      - name: refund_status
+        tests:
+          - accepted_values:
+              values: ['requested', 'completed', 'rejected']
+
+  - name: stg_inventory_events
+    columns:
+      - name: event_id
+        tests: [not_null, unique]
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: reason
+        tests:
+          - accepted_values:
+              values: ['receipt', 'sale', 'return', 'adjustment']
+
+  - name: dim_customer
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+
+  - name: dim_product
+    columns:
+      - name: product_id
+        tests: [not_null, unique]
+
+  - name: fct_orders
+    description: Provides item totals, payments, refunds, and net revenue at the order grain.
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+
+  - name: fct_order_items
+    description: Supports product analysis at the order-item grain.
+    columns:
+      - name: order_item_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('fct_orders')
+              field: order_id
+
+  - name: fct_inventory_daily
+    columns:
+      - name: product_id
+        tests: [not_null]
+      - name: inventory_date
+        tests: [not_null]
+
+  - name: mart_daily_commerce_kpi
+    columns:
+      - name: metric_date
+        tests: [not_null, unique]
+      - name: completed_orders
+        tests: [not_null]
+      - name: net_revenue
+        tests: [not_null]
+
+  - name: mart_inventory_health
+    columns:
+      - name: product_id
+        tests: [not_null, unique]

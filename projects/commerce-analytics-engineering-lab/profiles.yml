@@ -1,0 +1,8 @@
+commerce_analytics_engineering_lab:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: target/commerce_analytics.duckdb
+      threads: 4
+

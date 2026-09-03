@@ -1,0 +1,25 @@
+name: commerce_analytics_engineering_lab
+version: "1.0.0"
+config-version: 2
+
+profile: commerce_analytics_engineering_lab
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+clean-targets: ["target", "dbt_packages", "logs"]
+
+models:
+  commerce_analytics_engineering_lab:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
+
+seeds:
+  commerce_analytics_engineering_lab:
+    +quote_columns: false
+
