@@ -4,6 +4,8 @@ This repository is a portfolio hub for data science, data engineering, and analy
 
 [한국어 버전](README.md)
 
+[Technical profile](TECHNICAL_PROFILE.en.md)
+
 > Each case study separates the problem, validation approach, key results, interpretation scope, and limitations. Results are never presented as production-service performance.
 
 ## Projects
