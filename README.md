@@ -11,11 +11,12 @@
 | Project | Role focus | What it demonstrates |
 | --- | --- | --- |
 | [이상거래 리스크 스코어링](projects/fraud-risk-scoring/) | Data Science · Risk Analytics | 시간 분할 검증, 레이블 지연, 검토 용량 기반 모델 평가, 오류·세그먼트 분석 |
+| [Counie CS 운영 인텔리전스](projects/cs-operations-intelligence/) | Business Analytics · CS Operations · AI Automation | SQL KPI·SLA 위험 분석, 정책 근거형 AI 지원, PII 마스킹, 상담사 검수 라우팅 |
 
 ## Repository policy
 
 - 원천 데이터, 개인 정보, 비공개 키, 로컬 환경 파일은 저장소에 올리지 않습니다.
-- 이 저장소는 **포트폴리오 허브**입니다. 실행 코드와 완전한 재현 절차는 각 프로젝트의 별도 코드 저장소가 공개될 때 연결합니다.
+- 이 저장소는 **포트폴리오 허브**입니다. 공개 가능한 프로젝트는 코드·SQL·테스트·재현 절차를 함께 포함할 수 있으며, 원천 데이터와 비밀정보는 포함하지 않습니다.
 - 각 사례에는 공개 가능한 결과물과 결과 해석의 범위·한계를 우선 제공합니다.
 
 ## Contact

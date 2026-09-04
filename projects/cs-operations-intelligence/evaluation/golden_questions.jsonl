@@ -1,0 +1,3 @@
+{"question":"배송 예정일이 지났는데 언제 받을 수 있나요?","expected_policy_id":"P-DEL-2026-01","expected_route":"agent_approval"}
+{"question":"반품했는데 환불이 언제 되나요?","expected_policy_id":"P-REF-2026-01","expected_route":"agent_approval"}
+{"question":"결제가 실패했고 보상도 요구합니다.","expected_policy_id":"P-PAY-2026-02","expected_route":"specialist_review"}

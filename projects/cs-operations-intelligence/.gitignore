@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.env
+data/policies.json
+data/synthetic_*.csv
+outputs/*
+!outputs/.gitkeep
