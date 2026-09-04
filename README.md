@@ -11,6 +11,7 @@
 | Project | Role focus | What it demonstrates |
 | --- | --- | --- |
 | [이상거래 리스크 스코어링](projects/fraud-risk-scoring/) | Data Science · Risk Analytics | 시간 분할 검증, 레이블 지연, 검토 용량 기반 모델 평가, 오류·세그먼트 분석 |
+| [딜리버리 데이터 플랫폼](projects/delivery-data-platform/) | Data Engineering · Delivery Operations | 이벤트 계약, 데이터 품질, 배차 품질 마트, 지연 이벤트 재처리 및 A/B 테스트 데이터 설계 |
 
 ## Repository policy
 
