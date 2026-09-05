@@ -30,6 +30,7 @@
 | 사례 | 확인 가능한 기술·방법 | 해석 범위 |
 | --- | --- | --- |
 | [공개 클릭스트림 기반 사용자 탐색 행동 분석](projects/clickstream-behavior-analysis/) | SQL, Node.js, 세션 집계, 탐색 깊이 세그먼트, 기술 통계 | 구매·매출·리텐션을 포함하지 않는 공개 클릭스트림 분석 |
+| [고객 재구매 예측과 CRM 우선순위 설계](projects/customer-repurchase-analytics/) | Python, 시간 분할, RFM·상품 다양성 특징, 기준선 대비 우선순위 평가 | 공개 거래 데이터의 오프라인 분석 |
 | [이상거래 리스크 스코어링](projects/fraud-risk-scoring/) | Python, 시간 분할 검증, 기준선 비교, 우선순위 큐, 오류·세그먼트 분석 | 시뮬레이션 데이터의 오프라인 프로토타입 |
 | [Sales & Marketing Analytics + AI Copilot](projects/sales-marketing-analytics-ai-copilot/) | 데이터 마트 설계, 데이터 품질 규칙, SQL 모델, AI 업무 흐름 설계 | 합성 데이터 기반의 가상 케이스 스터디 |
 

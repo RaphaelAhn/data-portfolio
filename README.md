@@ -14,6 +14,7 @@
 | --- | --- | --- |
 | [이상거래 리스크 스코어링](projects/fraud-risk-scoring/) | Data Science · Risk Analytics | 시간 분할 검증, 레이블 지연, 검토 용량 기반 모델 평가, 오류·세그먼트 분석 |
 | [딜리버리 데이터 플랫폼](projects/delivery-data-platform/) | Data Engineering · Delivery Operations | 이벤트 계약, 데이터 품질, 배차 품질 마트, 지연 이벤트 재처리 및 A/B 테스트 데이터 설계 |
+| [고객 재구매 예측과 CRM 우선순위 설계](projects/customer-repurchase-analytics/) | Data Science · CRM Analytics | 시간 분할, RFM·상품 다양성 특징, 재구매 우선순위 평가, 실험 설계 경계 |
 | [Sales & Marketing Analytics + AI Copilot](projects/sales-marketing-analytics-ai-copilot/) | Business Analytics · Analytics Engineering · AX | 데이터 마트 설계, 데이터 품질 규칙, 퍼널·매출 지표, 설명 가능한 리드 우선순위, 안전한 AI 업무 흐름 |
 
 ## Repository policy
