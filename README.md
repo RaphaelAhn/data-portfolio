@@ -6,7 +6,7 @@
 
 [기술 프로필](TECHNICAL_PROFILE.md)
 
-[에이블리 데이터 분석가 지원용 포트폴리오](applications/ably-data-analyst/)
+[데이터 분석가 채용 지원 포트폴리오](applications/data-analyst-application-portfolio/)
 
 > 각 사례는 문제 정의, 검증 방법, 핵심 결과, 해석 범위와 한계를 구분해 기록합니다. 실제 서비스 운영 성과로 해석될 수 있는 표현은 사용하지 않습니다.
 
