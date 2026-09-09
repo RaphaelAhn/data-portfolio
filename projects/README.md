@@ -5,4 +5,5 @@
 - [이상거래 리스크 스코어링](fraud-risk-scoring/)
 - [딜리버리 데이터 플랫폼](delivery-data-platform/)
 - [고객 재구매 예측과 CRM 우선순위 설계](customer-repurchase-analytics/)
+- [공개 클릭스트림 기반 세션 탐색 행동 분석](clickstream-behavior-analysis/)
 - [Sales & Marketing Analytics + AI Copilot](sales-marketing-analytics-ai-copilot/)

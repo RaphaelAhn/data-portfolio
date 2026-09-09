@@ -6,6 +6,8 @@
 
 [기술 프로필](TECHNICAL_PROFILE.md)
 
+[에이블리 데이터 분석가 지원용 포트폴리오](applications/ably-data-analyst/)
+
 > 각 사례는 문제 정의, 검증 방법, 핵심 결과, 해석 범위와 한계를 구분해 기록합니다. 실제 서비스 운영 성과로 해석될 수 있는 표현은 사용하지 않습니다.
 
 ## Projects
@@ -15,6 +17,7 @@
 | [이상거래 리스크 스코어링](projects/fraud-risk-scoring/) | Data Science · Risk Analytics | 시간 분할 검증, 레이블 지연, 검토 용량 기반 모델 평가, 오류·세그먼트 분석 |
 | [딜리버리 데이터 플랫폼](projects/delivery-data-platform/) | Data Engineering · Delivery Operations | 이벤트 계약, 데이터 품질, 배차 품질 마트, 지연 이벤트 재처리 및 A/B 테스트 데이터 설계 |
 | [고객 재구매 예측과 CRM 우선순위 설계](projects/customer-repurchase-analytics/) | Data Science · CRM Analytics | 시간 분할, RFM·상품 다양성 특징, 재구매 우선순위 평가, 실험 설계 경계 |
+| [공개 클릭스트림 기반 세션 탐색 행동 분석](projects/clickstream-behavior-analysis/) | Product Analytics · Customer Behavior | 세션 집계, 탐색 깊이 세그먼트, 관측 결과와 인과 해석의 분리 |
 | [Sales & Marketing Analytics + AI Copilot](projects/sales-marketing-analytics-ai-copilot/) | Business Analytics · Analytics Engineering · AX | 데이터 마트 설계, 데이터 품질 규칙, 퍼널·매출 지표, 설명 가능한 리드 우선순위, 안전한 AI 업무 흐름 |
 
 ## Repository policy
