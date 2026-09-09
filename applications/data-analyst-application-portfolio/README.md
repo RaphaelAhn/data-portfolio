@@ -4,6 +4,8 @@
 >
 > 모든 관측 수치는 공개 데이터의 오프라인 분석 결과입니다. 실제 기업의 고객·매출·캠페인 성과, A/B 테스트 결과 또는 운영 경험을 주장하지 않습니다.
 
+[제출용 PDF 포트폴리오 - 9 pages](Ahn_Seongchan_Data_Analyst_Application_Portfolio.pdf)
+
 ## 채용 지원에서 보여 주는 역량
 
 | 기대 역량 | 포트폴리오 근거 |
