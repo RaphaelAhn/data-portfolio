@@ -128,3 +128,50 @@ models:
     columns:
       - name: product_id
         tests: [not_null, unique]
+
+  - name: stg_campaigns
+    columns:
+      - name: campaign_id
+        tests: [not_null, unique]
+      - name: platform
+        tests:
+          - accepted_values:
+              values: ['meta', 'google', 'naver']
+
+  - name: stg_ad_spend
+    description: Latest reported spend per campaign and day; platform restatements replace earlier reports.
+    columns:
+      - name: campaign_id
+        tests:
+          - relationships:
+              to: ref('stg_campaigns')
+              field: campaign_id
+
+  - name: stg_ad_clicks
+    columns:
+      - name: click_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+  - name: int_order_attribution
+    description: One row per order with its last-click channel within a 7-day window, or organic.
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: channel
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['meta', 'google', 'naver', 'organic']
+
+  - name: mart_channel_daily_performance
+    description: Date x channel marketing performance joining ad spend to last-click attributed net revenue (ROAS, CPA, CTR).
+    columns:
+      - name: metric_date
+        tests: [not_null]
+      - name: channel
+        tests: [not_null]

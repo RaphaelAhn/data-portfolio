@@ -14,7 +14,7 @@ Commerce teams can calculate different versions of the same metric when order st
 4. How can duplicate inventory events and invalid product references be detected?
 5. Does a repeated pipeline run produce the same analytical outputs?
 
-## Three portfolio examples
+## Four portfolio examples
 
 ### 1. Order, payment, and refund reconciliation
 
@@ -40,7 +40,7 @@ Cancelled orders receive zero recognized revenue. Average order value uses `NULL
 
 Synthetic refund `R102` occurs on August 10 but arrives on August 12. Rebuilding the models restates order `O105` from 35,000 to 30,000 net revenue on its original order date.
 
-The project validates primary keys, relationships, accepted statuses, amount ranges, order/payment reconciliation, late-refund behavior, daily KPI reconciliation, and non-negative inventory. `scripts/verify_idempotency.py` runs `dbt build` twice and compares row counts and SHA-256 hashes for five core marts.
+The project validates primary keys, relationships, accepted statuses, amount ranges, order/payment reconciliation, late-refund behavior, daily KPI reconciliation, and non-negative inventory. `scripts/verify_idempotency.py` runs `dbt build` twice and compares row counts and SHA-256 hashes for six core marts.
 
 ### 3. Inventory events and stockout status
 
@@ -54,6 +54,26 @@ inventory events
     → latest product inventory and stockout status
 ```
 
+### 4. Ad spend and last-click channel performance (ROAS)
+
+Synthetic Meta, Google, and Naver campaign spend is joined to orders through ad clicks. `mart_channel_daily_performance` publishes impressions, clicks, cost, attributed orders, attributed net revenue, ROAS, CPA, and CTR per date and channel.
+
+```text
+ad spend reports (restated) + campaigns + ad clicks + fct_orders
+    → latest report per campaign-day
+    → last click at or before the order, within 7 days (else organic)
+    → date x channel spend and attributed net revenue
+    → mart_channel_daily_performance
+```
+
+Three rules are tested:
+
+- Meta restated its 2026-08-01 spend from 30,000 to 27,000; only the latest report counts.
+- A click after the order and a click older than 7 days do not attribute the order (`O103` stays organic).
+- Channel revenue, including organic, adds up to `mart_daily_commerce_kpi` net revenue for every day, so the late refund on `O105` also restates Meta ROAS on its order date.
+
+The same mart is re-implemented in PySpark in [spark/channel_performance.py](spark/channel_performance.py). It starts from the raw seeds (not the dbt models), rebuilds latest-state orders, payments, refunds and restated spend, applies the same attribution rule, and then compares every row with the dbt table. It exits non-zero on any difference; widening the Spark window to 30 days, for example, makes it fail on `O103`.
+
 ## Model layers and grain
 
 | Model | Grain | Purpose |
@@ -65,6 +85,8 @@ inventory events
 | `fct_inventory_daily` | One row per product and movement date | Calculates daily movement and running ending inventory |
 | `mart_daily_commerce_kpi` | One row per order date | Publishes completed orders, revenue components, and average order value |
 | `mart_inventory_health` | One row per product | Publishes latest inventory and stockout status |
+| `int_order_attribution` | One row per order | Assigns the last-click channel within 7 days, or organic |
+| `mart_channel_daily_performance` | One row per date and channel | Publishes spend, attributed revenue, ROAS, CPA, and CTR |
 
 ## Data flow
 
@@ -72,6 +94,7 @@ inventory events
 CSV seeds
   └─ raw_orders / raw_order_items / raw_payments / raw_refunds
      raw_products / raw_customers / raw_inventory_events
+     raw_campaigns / raw_ad_spend / raw_ad_clicks
           ↓
 staging: types, normalized statuses, latest records, duplicate removal
           ↓
@@ -90,22 +113,28 @@ marts: facts, dimensions, daily commerce KPIs, inventory health
 | Net revenue | Completed payment amount − completed refund amount | Includes partial refunds and restates the order-date metric |
 | Completed orders | Completed orders with a positive completed payment | Treatment of fully refunded orders requires a business decision |
 | Average order value | Net revenue ÷ completed orders | Returns `NULL` when the denominator is zero |
+| ROAS | Attributed net revenue ÷ ad cost | `0` when spend had no attributed revenue; `NULL` for zero-spend rows such as organic |
+| CPA | Ad cost ÷ attributed completed orders | Last-click, 7-day window; view-through and multi-touch are out of scope |
 
 ## Verification evidence
 
 The checked-in synthetic fixtures were built twice with dbt 1.9.8 and dbt-duckdb 1.9.6.
 
-- 7 seeds, 17 models, and 47 data tests per build
-- 71 total dbt items per build
-- `PASS=71, WARN=0, ERROR=0, SKIP=0` on both builds
-- Identical row counts and SHA-256 hashes for all five core marts across both runs
+- 10 seeds, 22 models, and 65 data tests per build
+- 97 total dbt items per build
+- `PASS=97, WARN=0, ERROR=0, SKIP=0` on both builds
+- Identical row counts and SHA-256 hashes for all six core marts across both runs
+- PySpark 3.5.9 (local mode, Java 17) reproduces all 13 rows of `mart_channel_daily_performance` exactly
 
 This evidence proves deterministic behavior for the current small fixtures. It does not prove production concurrency, distributed exactly-once processing, service-level objectives, or large-scale query performance.
 
 ## Documentation
 
-- [Beginner-friendly technical guide](docs/TECHNICAL_GUIDE.md)
-- [Evidence-based code review](docs/CODE_REVIEW.md)
+- [Project plan (기획서)](docs/PLAN.md)
+- [Beginner-friendly technical guide (기술서)](docs/TECHNICAL_GUIDE.md)
+- [Evidence-based code review (코드 리뷰)](docs/CODE_REVIEW.md)
+- [Step-by-step guide for non-engineers (설명서)](docs/GUIDE.md)
+- [Benchmarks (100K/500K/1M orders, real measured times)](docs/benchmarks.md)
 
 ## Run locally
 
@@ -115,6 +144,8 @@ Python 3.11 or newer is recommended.
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe scripts\verify_idempotency.py
+# PySpark parity check (needs Java 17 and JAVA_HOME)
+.\.venv\Scripts\python.exe spark\channel_performance.py
 ```
 
 DuckDB files, dbt build artifacts, logs, virtual environments, and personal settings are excluded from version control.
@@ -132,6 +163,8 @@ DuckDB files, dbt build artifacts, logs, virtual environments, and personal sett
 ## Known limitations
 
 - The project uses a tiny synthetic batch dataset.
+- The PySpark job runs in local mode and does not write Delta tables; on Databricks the result would be saved as a Delta table instead of collected.
+- Attribution is last-click only; ad clicks are joined by `order_id`, which a real stack would derive from UTM/session data.
 - CDC, Kafka, Flink, BigQuery, and serving APIs are design extensions, not implemented features.
 - Freshness is documented but no production SLA is measured.
 - Product effective dates are present, but a complete SCD Type 2 transformation is not implemented.

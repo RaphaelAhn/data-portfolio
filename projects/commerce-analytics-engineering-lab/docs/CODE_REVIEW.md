@@ -40,14 +40,14 @@ The findings are ordered by severity. No Critical or High issues were found in t
 - **Smallest correction:** use a full outer join and fail when either date is missing or coalesced values differ.
 - **Confidence:** verified. The current mart groups directly from the fact, so no date is missing in the fixtures.
 
-### Low — The idempotency script assumes a Windows executable name
+### Fixed — The idempotency script assumed a Windows executable name that turned out to be broken even on Windows
 
-- **Location:** `scripts/verify_idempotency.py:23-26`
-- **Trigger:** the script runs in a Linux or macOS virtual environment.
-- **Failure mode:** it looks specifically for `dbt.exe`, while non-Windows environments normally expose `dbt`.
-- **Evidence:** the executable path is derived with `Path(sys.executable).with_name("dbt.exe")`.
-- **Smallest correction:** resolve `dbt` with `shutil.which`, or use another verified platform-neutral invocation and fail with a clear message when unavailable.
-- **Confidence:** verified by inspection. Windows execution passed; non-Windows execution was not available in this review.
+- **Location:** `scripts/verify_idempotency.py:23-26` (original)
+- **Trigger:** any environment, including the Windows venv this project was built in.
+- **Failure mode:** `Path(sys.executable).with_name("dbt.exe")` resolves to a console-script shim that exits 1 with no stdout/stderr in this venv (reproduced on 2026-09-10 while building `scripts/run_benchmark.py`). The original review's "Windows execution passed" note was based on an earlier venv state and did not hold when re-verified.
+- **Evidence:** `./.venv/Scripts/dbt.exe --version` and `dbt.exe build` both exited 1 with empty output; `python -c "from dbt.cli.main import cli; cli(['--version'])"` succeeded (exit 0) in the same venv.
+- **Fix applied:** `run_build()` now invokes `dbt.cli.main.cli` directly through `sys.executable -c`, which only depends on `dbt` being importable and works regardless of whether the console-script shim is intact.
+- **Confidence:** verified — reproduced the failure, applied the fix, and confirmed the new invocation path succeeds (exit 0, full dbt output) on 2026-09-10.
 
 ### Low — Product-date uniqueness is not an executable schema contract
 
@@ -74,6 +74,7 @@ The findings are ordered by severity. No Critical or High issues were found in t
 - Build 1: `PASS=71, WARN=0, ERROR=0, SKIP=0`
 - Build 2: `PASS=71, WARN=0, ERROR=0, SKIP=0`
 - Idempotency: identical row counts and SHA-256 hashes for `fct_orders`, `fct_order_items`, `fct_inventory_daily`, `mart_daily_commerce_kpi`, and `mart_inventory_health`
+- Scale: `PASS=71, WARN=0, ERROR=0, SKIP=0` reproduced at 100K, 500K, and 1M synthetic orders (see [benchmarks.md](benchmarks.md)) — the test suite is not scale-dependent within this range
 
 ## Strongest counterexample attempted
 

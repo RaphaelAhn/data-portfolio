@@ -17,13 +17,24 @@ TABLES = (
     "fct_inventory_daily",
     "mart_daily_commerce_kpi",
     "mart_inventory_health",
+    "mart_channel_daily_performance",
+)
+
+
+DBT_INVOKE_CODE = (
+    "import sys\n"
+    "from dbt.cli.main import cli\n"
+    "cli(['build', '--profiles-dir', sys.argv[1]])\n"
 )
 
 
 def run_build() -> None:
-    dbt_executable = Path(sys.executable).with_name("dbt.exe")
+    # The dbt.exe console-script shim fails silently (exit 1, no output) in
+    # this venv regardless of platform. Invoking dbt's CLI entry point
+    # directly through the interpreter avoids the shim entirely and works
+    # cross-platform, since it only depends on `dbt` being importable.
     subprocess.run(
-        [str(dbt_executable), "build", "--profiles-dir", str(ROOT)],
+        [sys.executable, "-c", DBT_INVOKE_CODE, str(ROOT)],
         cwd=ROOT,
         check=True,
     )
