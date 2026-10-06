@@ -19,11 +19,12 @@
 | [고객 재구매 예측과 CRM 우선순위 설계](projects/customer-repurchase-analytics/) | Data Science · CRM Analytics | 시간 분할, RFM·상품 다양성 특징, 재구매 우선순위 평가, 실험 설계 경계 |
 | [공개 클릭스트림 기반 세션 탐색 행동 분석](projects/clickstream-behavior-analysis/) | Product Analytics · Customer Behavior | 세션 집계, 탐색 깊이 세그먼트, 관측 결과와 인과 해석의 분리 |
 | [Sales & Marketing Analytics + AI Copilot](projects/sales-marketing-analytics-ai-copilot/) | Business Analytics · Analytics Engineering · AX | 데이터 마트 설계, 데이터 품질 규칙, 퍼널·매출 지표, 설명 가능한 리드 우선순위, 안전한 AI 업무 흐름 |
+| [합성 의약품 유통 주문·출고·반품 분석](projects/pharma-distribution-operations/) | Data Analytics · Analytics Engineering | 고정 시드 합성 데이터, 부분 출고·늦은 반품 집계, 독립 CSV 재계산과 무결성 검사 |
 
 ## Repository policy
 
 - 원천 데이터, 개인 정보, 비공개 키, 로컬 환경 파일은 저장소에 올리지 않습니다.
-- 이 저장소는 **포트폴리오 허브**입니다. 실행 코드와 완전한 재현 절차는 각 프로젝트의 별도 코드 저장소가 공개될 때 연결합니다.
+- 이 저장소는 **포트폴리오 허브**입니다. 작은 독립 사례는 실행 코드와 재현 절차를 함께 제공하며, 큰 구현은 별도 프로젝트 저장소를 연결합니다.
 - 각 사례에는 공개 가능한 결과물과 결과 해석의 범위·한계를 우선 제공합니다.
 
 ## Contact

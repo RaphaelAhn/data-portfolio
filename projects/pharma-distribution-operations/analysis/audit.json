@@ -1,0 +1,29 @@
+{
+  "as_of": "2026-10-06T23:59:59",
+  "daily_product_rows_checked": 57,
+  "independent_totals": {
+    "net_shipped_value_krw": 745000,
+    "order_line_count": 77,
+    "ordered_qty": 618,
+    "ordered_value_krw": 1525000,
+    "returned_qty": 49,
+    "returned_value_krw": 135000,
+    "shipped_qty": 339,
+    "shipped_value_krw": 880000
+  },
+  "sha256": {
+    "daily_product_metrics.csv": "102208de27440a0dad6e586ec3b9646defc078ec9a6f392a849f1d06b59853f8",
+    "inventory_snapshots.csv": "8beb2896c9da0a003de426b503839ab60786c8dfcce313af19dc9232c29d3cc4",
+    "order_lines.csv": "ac11d9f4df125fc275bda6c5c336c0656f3b64fe34041ca9995c37aa82e9a4db",
+    "return_lines.csv": "4b74f9f38bdef80e314c470830313d015d1aead6b69a0652a991fc2ac6446ce9",
+    "shipment_lines.csv": "ff456174bee9da16e2c15fce2db608ea1487e557ef1afc1170edd0a8ef67f03e",
+    "summary.json": "b01d84bf8ea99d762878f2f9b9cda6e51745952a0b14395a9e445a3d12f7633a"
+  },
+  "source_rows": {
+    "inventory_snapshots": 8,
+    "order_lines": 77,
+    "return_lines": 16,
+    "shipment_lines": 64
+  },
+  "status": "passed"
+}

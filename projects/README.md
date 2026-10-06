@@ -7,3 +7,4 @@
 - [고객 재구매 예측과 CRM 우선순위 설계](customer-repurchase-analytics/)
 - [공개 클릭스트림 기반 세션 탐색 행동 분석](clickstream-behavior-analysis/)
 - [Sales & Marketing Analytics + AI Copilot](sales-marketing-analytics-ai-copilot/)
+- [합성 의약품 유통 주문·출고·반품 분석](pharma-distribution-operations/)

@@ -1,0 +1,12 @@
+{
+  "ordered_qty": 618,
+  "shipped_qty": 339,
+  "returned_qty": 49,
+  "ordered_value_krw": 1525000,
+  "shipped_value_krw": 880000,
+  "returned_value_krw": 135000,
+  "net_shipped_value_krw": 745000,
+  "as_of": "2026-10-06T23:59:59",
+  "fulfillment_rate": 0.5485,
+  "order_line_count": 77
+}

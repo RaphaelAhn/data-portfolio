@@ -16,6 +16,7 @@ This repository is a portfolio hub for data science, data engineering, and analy
 | [Customer Repurchase Prediction and CRM Prioritization](projects/customer-repurchase-analytics/) | Data Science · CRM Analytics | Time-based validation, RFM and product-diversity features, capacity-aware ranking, and experimental boundaries |
 | [Commerce Analytics Engineering Lab](projects/commerce-analytics-engineering-lab/) | Analytics Engineering · Commerce Data | Order/payment/refund reconciliation, ad-spend ROAS mart with last-click attribution, PySpark parity check, late-data testing, and idempotent rebuilds |
 | [Sales & Marketing Analytics + AI Copilot](projects/sales-marketing-analytics-ai-copilot/README.en.md) | Business Analytics · Analytics Engineering · AX | Data-mart design, data-quality rules, funnel and revenue metrics, explainable lead prioritization, and safe AI workflow design |
+| [Synthetic Pharmaceutical Distribution Operations](projects/pharma-distribution-operations/) | Data Analytics · Analytics Engineering | Seeded order, shipment, and return CSVs; as-of cohort metrics; independent recalculation and integrity checks |
 
 ## Repository policy
 
